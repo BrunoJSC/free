@@ -1,0 +1,66 @@
+{
+  "name": "free",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "dotenv": "^17.4.2",
+      "zod": "^4.4.3",
+      "@types/bun": "^1.3.14",
+      "elysia": "^1.4.29",
+      "@trpc/server": "^11.18.0",
+      "better-auth": "1.6.23",
+      "evlog": "^2.19.2",
+      "@tanstack/react-query": "^5.101.2",
+      "lucide-react": "^1.23.0",
+      "next-themes": "^0.4.6",
+      "sonner": "^2.0.7",
+      "tailwindcss": "^4.3.2",
+      "@trpc/tanstack-react-query": "^11.18.0",
+      "@trpc/client": "^11.18.0",
+      "@tanstack/react-form": "^1.33.0",
+      "@types/react-dom": "^19.2.3",
+      "@better-auth/expo": "1.6.23",
+      "drizzle-orm": "^0.45.2",
+      "@types/pg": "^8.20.0"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "dev:native": "turbo run dev -F native",
+    "dev:web": "turbo run dev -F web",
+    "dev:server": "turbo run dev -F server",
+    "db:push": "turbo run db:push -F @free/db",
+    "db:studio": "turbo run db:studio -F @free/db",
+    "db:generate": "turbo run db:generate -F @free/db",
+    "db:migrate": "turbo run db:migrate -F @free/db",
+    "db:start": "turbo run db:start -F @free/db",
+    "db:watch": "turbo run db:watch -F @free/db",
+    "db:stop": "turbo run db:stop -F @free/db",
+    "db:down": "turbo run db:down -F @free/db",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@free/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.2",
+    "@free/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "husky": "latest",
+    "turbo": "^2.10.2",
+    "typescript": "^6",
+    "ultracite": "7.9.3"
+  },
+  "packageManager": "bun@1.3.14"
+}
