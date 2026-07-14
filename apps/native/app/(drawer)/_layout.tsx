@@ -7,65 +7,65 @@ import { NAV_THEME } from "@/lib/constants";
 import { useColorScheme } from "@/lib/use-color-scheme";
 
 const DrawerLayout = () => {
-  const { colorScheme } = useColorScheme();
-  const theme = colorScheme === "dark" ? NAV_THEME.dark : NAV_THEME.light;
+	const { colorScheme } = useColorScheme();
+	const theme = colorScheme === "dark" ? NAV_THEME.dark : NAV_THEME.light;
 
-  return (
-    <Drawer
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: theme.background,
-        },
-        headerTitleStyle: {
-          color: theme.text,
-        },
-        headerTintColor: theme.text,
-        drawerStyle: {
-          backgroundColor: theme.background,
-        },
-        drawerLabelStyle: {
-          color: theme.text,
-        },
-        drawerInactiveTintColor: theme.text,
-      }}
-    >
-      <Drawer.Screen
-        name="index"
-        options={{
-          headerTitle: "Home",
-          drawerLabel: "Home",
-          drawerIcon: ({ size, color }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="(tabs)"
-        options={{
-          headerTitle: "Tabs",
-          drawerLabel: "Tabs",
-          drawerIcon: ({ size, color }) => (
-            <MaterialIcons name="border-bottom" size={size} color={color} />
-          ),
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <HeaderButton />
-            </Link>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="todos"
-        options={{
-          headerTitle: "Todos",
-          drawerLabel: "Todos",
-          drawerIcon: ({ size, color }) => (
-            <Ionicons name="checkbox-outline" size={size} color={color} />
-          ),
-        }}
-      />
-    </Drawer>
-  );
+	return (
+		<Drawer
+			screenOptions={{
+				drawerInactiveTintColor: theme.text,
+				drawerLabelStyle: {
+					color: theme.text,
+				},
+				drawerStyle: {
+					backgroundColor: theme.background,
+				},
+				headerStyle: {
+					backgroundColor: theme.background,
+				},
+				headerTintColor: theme.text,
+				headerTitleStyle: {
+					color: theme.text,
+				},
+			}}
+		>
+			<Drawer.Screen
+				name="index"
+				options={{
+					drawerIcon: ({ size, color }) => (
+						<Ionicons color={color} name="home-outline" size={size} />
+					),
+					drawerLabel: "Home",
+					headerTitle: "Home",
+				}}
+			/>
+			<Drawer.Screen
+				name="(tabs)"
+				options={{
+					drawerIcon: ({ size, color }) => (
+						<MaterialIcons color={color} name="border-bottom" size={size} />
+					),
+					drawerLabel: "Tabs",
+					headerRight: () => (
+						<Link asChild href="/modal">
+							<HeaderButton />
+						</Link>
+					),
+					headerTitle: "Tabs",
+				}}
+			/>
+			<Drawer.Screen
+				name="todos"
+				options={{
+					drawerIcon: ({ size, color }) => (
+						<Ionicons color={color} name="checkbox-outline" size={size} />
+					),
+					drawerLabel: "Todos",
+					headerTitle: "Todos",
+				}}
+			/>
+		</Drawer>
+	);
 };
 
 export default DrawerLayout;

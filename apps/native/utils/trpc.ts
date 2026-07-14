@@ -10,32 +10,32 @@ import { authClient } from "@/lib/auth-client";
 export const queryClient = new QueryClient();
 
 const trpcClient = createTRPCClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: `${env.EXPO_PUBLIC_SERVER_URL}/trpc`,
-      fetch: function (url, options) {
-        return fetch(url, {
-          ...options,
-          // Better Auth Expo forwards the session cookie manually on native.
-          credentials: Platform.OS === "web" ? "include" : "omit",
-        });
-      },
-      headers() {
-        if (Platform.OS === "web") {
-          return {};
-        }
-        const headers = new Map<string, string>();
-        const cookies = authClient.getCookie();
-        if (cookies) {
-          headers.set("Cookie", cookies);
-        }
-        return Object.fromEntries(headers);
-      },
-    }),
-  ],
+	links: [
+		httpBatchLink({
+			fetch(url, options) {
+				return globalThis.fetch(url, {
+					...options,
+					// Better Auth Expo forwards the session cookie manually on native.
+					credentials: Platform.OS === "web" ? "include" : "omit",
+				});
+			},
+			headers() {
+				if (Platform.OS === "web") {
+					return {};
+				}
+				const headers = new Map<string, string>();
+				const cookies = authClient.getCookie();
+				if (cookies) {
+					headers.set("Cookie", cookies);
+				}
+				return Object.fromEntries(headers);
+			},
+			url: `${env.EXPO_PUBLIC_SERVER_URL}/trpc`,
+		}),
+	],
 });
 
 export const trpc = createTRPCOptionsProxy<AppRouter>({
-  client: trpcClient,
-  queryClient,
+	client: trpcClient,
+	queryClient,
 });

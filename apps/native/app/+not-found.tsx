@@ -31,7 +31,7 @@ export default function NotFoundScreen() {
 										textAlign: "center",
 									}}
 								>
-									 Page Not Found
+									Page Not Found
 								</ExpoUIText>
 								<ExpoUIText
 									style={{ opacity: 0.7 }}
