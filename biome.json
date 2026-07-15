@@ -26,6 +26,7 @@
       "!**/wrangler.jsonc",
       "!**/.source",
       "!**/convex/_generated",
+      "!**/src/migrations",
       "!**/.claude/skills",
       "!**/.agents/skills",
       "!**/.cursor",
