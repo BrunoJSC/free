@@ -16,6 +16,8 @@
     "@better-auth/expo": "catalog:",
     "@free/db": "workspace:*",
     "@free/env": "workspace:*",
+    "@free/validators": "workspace:*",
+    "@types/pg": "catalog:",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:"
