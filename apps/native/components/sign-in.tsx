@@ -1,3 +1,4 @@
+import { signInSchema } from "@free/validators/auth";
 import { useForm } from "@tanstack/react-form";
 import { useCallback, useState } from "react";
 import {
@@ -7,25 +8,12 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import z from "zod";
 
 import { FormTextInput } from "@/components/form-text-input";
 import { authClient } from "@/lib/auth-client";
 import { NAV_THEME } from "@/lib/constants";
 import { useColorScheme } from "@/lib/use-color-scheme";
 import { queryClient } from "@/utils/trpc";
-
-const signInSchema = z.object({
-	email: z
-		.string()
-		.trim()
-		.min(1, "Email is required")
-		.email("Enter a valid email address"),
-	password: z
-		.string()
-		.min(1, "Password is required")
-		.min(8, "Use at least 8 characters"),
-});
 
 function getErrorMessage(error: unknown): string | null {
 	if (!error) {
@@ -75,22 +63,23 @@ function SignIn() {
 			password: "",
 		},
 		onSubmit: async ({ value, formApi }) => {
-			await authClient.signIn.email(
-				{
-					email: value.email.trim(),
-					password: value.password,
+			// O TanStack Form valida com o schema mas não escreve a saída dele de
+			// volta no estado do formulário: `value` continua sendo o que o usuário
+			// digitou, sem o `.trim()`. Por isso o `parse` aqui — é o que normaliza,
+			// e sai da mesma fonte que validou. Não lança: o `onSubmit` só roda depois
+			// que o `validators.onSubmit` passou.
+			const credentials = signInSchema.parse(value);
+
+			await authClient.signIn.email(credentials, {
+				onError(signInError) {
+					setError(signInError.error?.message || "Failed to sign in");
 				},
-				{
-					onError(signInError) {
-						setError(signInError.error?.message || "Failed to sign in");
-					},
-					onSuccess() {
-						setError(null);
-						formApi.reset();
-						queryClient.refetchQueries();
-					},
-				}
-			);
+				onSuccess() {
+					setError(null);
+					formApi.reset();
+					queryClient.refetchQueries();
+				},
+			});
 		},
 		validators: {
 			onSubmit: signInSchema,

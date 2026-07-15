@@ -4,6 +4,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { Platform } from "react-native";
+import superjson from "superjson";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -30,6 +31,8 @@ const trpcClient = createTRPCClient<AppRouter>({
 				}
 				return Object.fromEntries(headers);
 			},
+			// Precisa ser o mesmo transformer do servidor (`packages/api/src/index.ts`).
+			transformer: superjson,
 			url: `${env.EXPO_PUBLIC_SERVER_URL}/trpc`,
 		}),
 	],

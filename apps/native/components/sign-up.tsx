@@ -1,3 +1,4 @@
+import { signUpSchema } from "@free/validators/auth";
 import { useForm } from "@tanstack/react-form";
 import { useCallback, useState } from "react";
 import {
@@ -7,30 +8,12 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import z from "zod";
 
 import { FormTextInput } from "@/components/form-text-input";
 import { authClient } from "@/lib/auth-client";
 import { NAV_THEME } from "@/lib/constants";
 import { useColorScheme } from "@/lib/use-color-scheme";
 import { queryClient } from "@/utils/trpc";
-
-const signUpSchema = z.object({
-	email: z
-		.string()
-		.trim()
-		.min(1, "Email is required")
-		.email("Enter a valid email address"),
-	name: z
-		.string()
-		.trim()
-		.min(1, "Name is required")
-		.min(2, "Name must be at least 2 characters"),
-	password: z
-		.string()
-		.min(1, "Password is required")
-		.min(8, "Use at least 8 characters"),
-});
 
 function getErrorMessage(error: unknown): string | null {
 	if (!error) {
@@ -81,23 +64,23 @@ function SignUp() {
 			password: "",
 		},
 		onSubmit: async ({ value, formApi }) => {
-			await authClient.signUp.email(
-				{
-					email: value.email.trim(),
-					name: value.name.trim(),
-					password: value.password,
+			// O TanStack Form valida com o schema mas não escreve a saída dele de
+			// volta no estado do formulário: `value` continua sendo o que o usuário
+			// digitou, sem o `.trim()`. Por isso o `parse` aqui — é o que normaliza,
+			// e sai da mesma fonte que validou. Não lança: o `onSubmit` só roda depois
+			// que o `validators.onSubmit` passou.
+			const credentials = signUpSchema.parse(value);
+
+			await authClient.signUp.email(credentials, {
+				onError(signUpError) {
+					setError(signUpError.error?.message || "Failed to sign up");
 				},
-				{
-					onError(signUpError) {
-						setError(signUpError.error?.message || "Failed to sign up");
-					},
-					onSuccess() {
-						setError(null);
-						formApi.reset();
-						queryClient.refetchQueries();
-					},
-				}
-			);
+				onSuccess() {
+					setError(null);
+					formApi.reset();
+					queryClient.refetchQueries();
+				},
+			});
 		},
 		validators: {
 			onSubmit: signUpSchema,
