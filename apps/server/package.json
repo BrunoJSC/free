@@ -22,6 +22,7 @@
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "elysia": "catalog:",
+    "elysia-rate-limit": "^4.6.2",
     "evlog": "catalog:",
     "zod": "catalog:"
   },
