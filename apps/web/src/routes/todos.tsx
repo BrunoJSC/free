@@ -13,8 +13,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Loader2, Trash2 } from "lucide-react";
 import {
 	type ChangeEvent,
-	type FormEvent,
 	type ReactNode,
+	type SubmitEvent,
 	useCallback,
 	useState,
 } from "react";
@@ -105,7 +105,7 @@ function TodosRoute() {
 	);
 
 	const handleAddTodo = useCallback(
-		(e: FormEvent<HTMLFormElement>) => {
+		(e: SubmitEvent<HTMLFormElement>) => {
 			e.preventDefault();
 			if (newTodoText.trim()) {
 				createMutation.mutate({ text: newTodoText });

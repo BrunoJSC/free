@@ -6,6 +6,7 @@ import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { toast } from "sonner";
+import superjson from "superjson";
 
 import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
@@ -67,6 +68,8 @@ const trpcClient = createTRPCClient<AppRouter>({
 					credentials: "include",
 				});
 			},
+			// Precisa ser o mesmo transformer do servidor (`packages/api/src/index.ts`).
+			transformer: superjson,
 			url: `${getServerUrl(env.VITE_SERVER_URL)}/trpc`,
 		}),
 	],

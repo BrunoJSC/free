@@ -12,6 +12,7 @@
     "@free/api": "workspace:*",
     "@free/env": "workspace:*",
     "@free/ui": "workspace:*",
+    "@free/validators": "workspace:*",
     "@tailwindcss/vite": "^4.3.2",
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
@@ -30,6 +31,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "sonner": "catalog:",
+    "superjson": "catalog:",
     "tailwindcss": "catalog:",
     "zod": "catalog:"
   },

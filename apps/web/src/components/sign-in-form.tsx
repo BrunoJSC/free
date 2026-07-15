@@ -1,9 +1,9 @@
 import { Button } from "@free/ui/components/button";
+import { signInSchema } from "@free/validators/auth";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
-import { type FormEvent, useCallback } from "react";
+import { type SubmitEvent, useCallback } from "react";
 import { toast } from "sonner";
-import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -34,34 +34,32 @@ export default function SignInForm({
 			password: "",
 		},
 		onSubmit: async ({ value }) => {
-			await authClient.signIn.email(
-				{
-					email: value.email,
-					password: value.password,
+			// O TanStack Form valida com o schema mas não escreve a saída dele de
+			// volta no estado do formulário: `value` continua sendo o que o usuário
+			// digitou, sem o `.trim()`. Por isso o `parse` aqui — é o que normaliza,
+			// e sai da mesma fonte que validou. Não lança: o `onSubmit` só roda depois
+			// que o `validators.onSubmit` passou.
+			const credentials = signInSchema.parse(value);
+
+			await authClient.signIn.email(credentials, {
+				onError: (error) => {
+					toast.error(error.error.message || error.error.statusText);
 				},
-				{
-					onError: (error) => {
-						toast.error(error.error.message || error.error.statusText);
-					},
-					onSuccess: () => {
-						navigate({
-							to: "/dashboard",
-						});
-						toast.success("Sign in successful");
-					},
-				}
-			);
+				onSuccess: () => {
+					navigate({
+						to: "/dashboard",
+					});
+					toast.success("Sign in successful");
+				},
+			});
 		},
 		validators: {
-			onSubmit: z.object({
-				email: z.email("Invalid email address"),
-				password: z.string().min(8, "Password must be at least 8 characters"),
-			}),
+			onSubmit: signInSchema,
 		},
 	});
 
 	const handleSubmit = useCallback(
-		(event: FormEvent<HTMLFormElement>) => {
+		(event: SubmitEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			event.stopPropagation();
 			form.handleSubmit();

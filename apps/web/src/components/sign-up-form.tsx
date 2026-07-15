@@ -1,9 +1,9 @@
 import { Button } from "@free/ui/components/button";
+import { signUpSchema } from "@free/validators/auth";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
-import { type FormEvent, useCallback } from "react";
+import { type SubmitEvent, useCallback } from "react";
 import { toast } from "sonner";
-import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -35,36 +35,32 @@ export default function SignUpForm({
 			password: "",
 		},
 		onSubmit: async ({ value }) => {
-			await authClient.signUp.email(
-				{
-					email: value.email,
-					name: value.name,
-					password: value.password,
+			// O TanStack Form valida com o schema mas não escreve a saída dele de
+			// volta no estado do formulário: `value` continua sendo o que o usuário
+			// digitou, sem o `.trim()`. Por isso o `parse` aqui — é o que normaliza,
+			// e sai da mesma fonte que validou. Não lança: o `onSubmit` só roda depois
+			// que o `validators.onSubmit` passou.
+			const credentials = signUpSchema.parse(value);
+
+			await authClient.signUp.email(credentials, {
+				onError: (error) => {
+					toast.error(error.error.message || error.error.statusText);
 				},
-				{
-					onError: (error) => {
-						toast.error(error.error.message || error.error.statusText);
-					},
-					onSuccess: () => {
-						navigate({
-							to: "/dashboard",
-						});
-						toast.success("Sign up successful");
-					},
-				}
-			);
+				onSuccess: () => {
+					navigate({
+						to: "/dashboard",
+					});
+					toast.success("Sign up successful");
+				},
+			});
 		},
 		validators: {
-			onSubmit: z.object({
-				email: z.email("Invalid email address"),
-				name: z.string().min(2, "Name must be at least 2 characters"),
-				password: z.string().min(8, "Password must be at least 8 characters"),
-			}),
+			onSubmit: signUpSchema,
 		},
 	});
 
 	const handleSubmit = useCallback(
-		(event: FormEvent<HTMLFormElement>) => {
+		(event: SubmitEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			event.stopPropagation();
 			form.handleSubmit();
