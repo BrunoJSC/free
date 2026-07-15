@@ -21,11 +21,11 @@
     "@types/pg": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",
+    "superjson": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@free/config": "workspace:*",
-    "elysia": "catalog:",
     "typescript": "^6"
   }
 }
