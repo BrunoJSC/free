@@ -1,0 +1,20 @@
+{
+  "name": "@free/validators",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./auth": "./src/auth.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@free/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "typescript": "^6"
+  }
+}
