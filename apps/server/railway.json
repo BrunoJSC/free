@@ -1,0 +1,16 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "bunx turbo run build --filter=server",
+    "watchPatterns": ["apps/server/**", "packages/**"]
+  },
+  "deploy": {
+    "startCommand": "cd apps/server && bun run start",
+    "preDeployCommand": ["cd packages/db && bun run db:push"],
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 300,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  }
+}
