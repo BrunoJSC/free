@@ -16,7 +16,7 @@ import { evlog } from "evlog/elysia";
 import { getClientIp } from "./client-ip";
 import { toRequestInfo } from "./request-info";
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 /**
  * Rede de segurança global, por IP, em cima de TODAS as rotas. É deliberadamente
